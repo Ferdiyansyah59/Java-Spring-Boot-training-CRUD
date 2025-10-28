@@ -12,7 +12,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findByPublished(Boolean published);
 
     List<Article> findByAuthor(String author);
-
     List<Article> findByTitleArticleContaining(String keyword);
 
     @Query("SELECT a FROM Article a WHERE a.published = true ORDER BY a.createdAt DESC")
