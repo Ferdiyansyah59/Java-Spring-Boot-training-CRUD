@@ -79,4 +79,15 @@ public class GlobalExceptionHandler {
          return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
      }
 
+     @ExceptionHandler(ResourceAlreadyExistException.class)
+     public ResponseEntity<ErrorResponse> resourceAlreadyExist(ResourceAlreadyExistException ex) {
+         ErrorResponse err = new ErrorResponse(
+                 HttpStatus.CONFLICT.value(), // 409 conflict
+                 ex.getMessage(), // Pesan spesifik dari yang manggil nanti
+                 LocalDateTime.now()
+         );
+
+         return new ResponseEntity<>(err, HttpStatus.CONFLICT);
+     }
+
 }
