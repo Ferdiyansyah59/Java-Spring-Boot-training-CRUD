@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterRequestDTO registerRequest) {
+    public User register(RegisterRequestDTO registerRequest) {
 
         // ngecek apakah username sudah ada
         if (userRepo.existsByUsername(registerRequest.getUsername())) {
@@ -63,8 +63,6 @@ public class AuthServiceImpl implements AuthService {
 
         user.setRole("ROLE_USER"); // Mengatur role default
 
-        userRepo.save(user);
-
-        return "User registered successfully";
+        return  userRepo.save(user);
     }
 }

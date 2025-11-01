@@ -1,5 +1,7 @@
 package com.coba.spring.coba_crud_spring.config;
 
+import com.coba.spring.coba_crud_spring.security.JwtAccessDeniedHandler;
+import com.coba.spring.coba_crud_spring.security.JwtAuthenticationEntryPoint;
 import com.coba.spring.coba_crud_spring.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -35,11 +40,16 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
                 .authorizeHttpRequests(auth -> auth
                         // Izinkan (permitAll) endpoint registrasi dan login
                         .requestMatchers("/api/auth/**").permitAll()
                         // Izinkan endpoint artikel yang 'published'
                         .requestMatchers("/api/article/published").permitAll()
+                        .requestMatchers("/error").permitAll()
                         // Semua request lain harus diautentikasi
                         .anyRequest().authenticated()
                 )

@@ -3,6 +3,7 @@ package com.coba.spring.coba_crud_spring.controller;
 
 import com.coba.spring.coba_crud_spring.dto.ArticleRequestDTO;
 import com.coba.spring.coba_crud_spring.dto.ArticleResponseDTO;
+import com.coba.spring.coba_crud_spring.dto.SuccessResponse;
 import com.coba.spring.coba_crud_spring.service.ArticleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,30 +19,55 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<ArticleResponseDTO> createArticle(@Valid @RequestBody ArticleRequestDTO requestDTO) {
+    public ResponseEntity<SuccessResponse<ArticleResponseDTO>> createArticle(@Valid @RequestBody ArticleRequestDTO requestDTO) {
         ArticleResponseDTO createdArticle = articleService.createArticle(requestDTO);
-        return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
+
+        SuccessResponse<ArticleResponseDTO> res = new SuccessResponse<>(
+                HttpStatus.CREATED.value(),
+                "Article Created Successfully",
+                createdArticle
+        );
+
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<ArticleResponseDTO>> getAllArticles() {
+    public ResponseEntity<SuccessResponse<List<ArticleResponseDTO>>> getAllArticles() {
         List<ArticleResponseDTO> articles = articleService.getAllArticle();
-        return ResponseEntity.ok(articles);
+
+        SuccessResponse<List<ArticleResponseDTO>> res = new SuccessResponse<>(
+                HttpStatus.OK.value(),
+                "Article retrieved Successfully",
+                articles
+        );
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArticleResponseDTO> getArticleById(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<ArticleResponseDTO>> getArticleById(@PathVariable Long id) {
         ArticleResponseDTO article = articleService.getArticleById(id);
-        return ResponseEntity.ok(article);
+        SuccessResponse<ArticleResponseDTO> res = new SuccessResponse<>(
+                HttpStatus.OK.value(),
+                "Article found",
+                article
+        );
+        return ResponseEntity.ok(res);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ArticleResponseDTO> updateArticle (
+    public ResponseEntity<SuccessResponse<ArticleResponseDTO>> updateArticle (
             @PathVariable Long id,
             @Valid @RequestBody ArticleRequestDTO requestDTO
     ) {
         ArticleResponseDTO updatedArticle = articleService.updateArticle(id, requestDTO);
-        return ResponseEntity.ok(updatedArticle);
+
+        SuccessResponse<ArticleResponseDTO> res = new SuccessResponse<>(
+                HttpStatus.CREATED.value(),
+                "Article Updated Successfully!",
+                updatedArticle
+        );
+
+        return ResponseEntity.ok(res);
     }
 
     @DeleteMapping("/{id}")
@@ -51,8 +77,13 @@ public class ArticleController {
     }
 
     @GetMapping("/published")
-    public ResponseEntity<List<ArticleResponseDTO>> getPublishedArticles() {
+    public ResponseEntity<SuccessResponse<List<ArticleResponseDTO>>> getPublishedArticles() {
         List<ArticleResponseDTO> article = articleService.getPublishedArticles();
-        return ResponseEntity.ok(article);
+        SuccessResponse<List<ArticleResponseDTO>> res = new SuccessResponse<>(
+                HttpStatus.OK.value(),
+                "Article Updated Successfully!",
+                article
+        );
+        return ResponseEntity.ok(res);
     }
 }
